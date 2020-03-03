@@ -6,9 +6,16 @@
 </head>
 
 <body>
-  <input id="m" autocomplete="off"></input>
-  <button>Send</button>
+  <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
 
+  <script src="/socket.io/socket.io.js"></script>
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
   <script src="/js/client.js"></script>
 </body>
 </html>
