@@ -14,7 +14,9 @@ io.on('connection', function(socket) {
     console.log('New user connected...');
 
     socket.on('chat message', function(msg){
-        io.emit('chat message', msg);
+        let now = new Date();
+        let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        io.emit('chat message', time + '   ' + msg);
     });
 
     socket.on('disconnect', function(){
