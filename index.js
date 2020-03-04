@@ -1,8 +1,9 @@
-var express = require('express');
-var app = express();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
-path = require('path');
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const path = require('path');
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -13,10 +14,12 @@ app.get('/', function(req, res) {
 io.on('connection', function(socket) {
     console.log('New user connected...');
 
+    let username = uniqueNamesGenerator({ dictionaries: [adjectives, adjectives, animals] });
+
     socket.on('chat message', function(msg){
         let now = new Date();
         let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-        io.emit('chat message', time + '   ' + msg);
+        io.emit('chat message', username + '//' + time + '//' + msg);
     });
 
     socket.on('disconnect', function(){

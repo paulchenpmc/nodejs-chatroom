@@ -1,6 +1,6 @@
 // https://stackoverflow.com/questions/18614301/keep-overflow-div-scrolled-to-bottom-unless-user-scrolls-up
 function updateScroll(){
-  var element = document.getElementById("yourDivID");
+  var element = document.getElementById("messagelist");
   element.scrollTop = element.scrollHeight;
 }
 
@@ -16,6 +16,6 @@ $(function () {
 
     socket.on('chat message', function(msg){
       $('#messages').append($('<li>').text(msg));
-      // scroll to bottom here
+      updateScroll();
     });
 });
