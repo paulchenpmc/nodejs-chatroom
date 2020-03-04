@@ -11,16 +11,16 @@ body {
 form {
   display: flex;
   background: #000;
-  padding: 3px;
+  /* padding: 3px; */
   position: fixed;
   bottom: 0;
-  height: 4%;
+  height: 6vh;
   width: 100%;
 }
 
 form input {
   border: 0;
-  padding: 10px;
+  /* padding: 10px; */
   width: 90%;
   margin-right: .5%;
 }
@@ -29,7 +29,7 @@ form button {
   width: 9%;
   background: rgb(130, 224, 255);
   border: none;
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 #messages {
@@ -56,8 +56,16 @@ form button {
   flex: 1;
 }
 
+#chatcol > p {
+  height: 4vh;
+}
+
 #usercol {
   flex: 0 0 20%;
+}
+
+#usercol > p {
+  height: 4vh;
 }
 
 #userlist {
@@ -69,6 +77,6 @@ form button {
 #messagelist {
   border: 1px solid lightgray;
   align-items: stretch;
-  max-height: 94vh;
+  max-height: 90vh;
   overflow-y: scroll;
 }
