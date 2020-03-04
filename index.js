@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 const path = require('path');
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 let current_users = [];
+let message_history = [];
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -17,11 +18,14 @@ io.on('connection', function(socket) {
     console.log(username + ' connected...');
     current_users.push(username);
     socket.emit('your_username', username);
+    socket.emit('message_history', message_history);
     io.emit('current_users', current_users);
 
     socket.on('chat message', function(msg){
         let now = new Date();
         let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        if (message_history.length >= 200) message_history.shift();
+        message_history.push([username, time, msg]);
         io.emit('chat message', username, time, msg);
     });
 

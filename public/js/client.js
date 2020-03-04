@@ -1,9 +1,3 @@
-// https://stackoverflow.com/questions/18614301/keep-overflow-div-scrolled-to-bottom-unless-user-scrolls-up
-function updateScroll(){
-  let element = document.getElementById("messagelist");
-  element.scrollTop = element.scrollHeight;
-}
-
 $(function () {
     let socket = io();
     let username = '';
@@ -20,6 +14,15 @@ $(function () {
       }
     });
 
+    socket.on('message_history', function(messages){
+      for (msg of messages) {
+        let usrname = msg[0];
+        let time = msg[1];
+        let msgtext = msg[2];
+        $('#messages').append($('<li>').text(usrname + ' ' + time + ': ' + msgtext));
+      }
+    });
+
     $('form').submit(function(e){
       e.preventDefault(); // prevents page reloading
       if ($('#m').val() === '') return false;
@@ -32,6 +35,8 @@ $(function () {
       tag = '<li>';
       if (usrname === username) tag += '<b>';
       $('#messages').append($(tag).text(usrname + ' ' + time + ': ' + msg));
-      updateScroll();
+      // Update scrollbar
+      let element = document.getElementById("messagelist");
+      element.scrollTop = element.scrollHeight;
     });
 });
