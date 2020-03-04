@@ -16,6 +16,7 @@ form {
   bottom: 0;
   height: 6vh;
   width: 100%;
+  border: 1px solid black;
 }
 
 form input {
