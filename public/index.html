@@ -2,11 +2,24 @@
 <html lang="en">
 <head>
   <title>Socket.IO Chat</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-  <ul id="messages"></ul>
+  <div id="displaybox">
+    <div id="chatcol">
+      <p>Username</p>
+      <div id="messagelist">
+        <ul id="messages"></ul>
+      </div>
+    </div>
+    <div id="usercol">
+      <p>Online Users:</p>
+      <div id="userlist">
+        <ul id="onlineusers"></ul>
+      </div>
+    </div>
+  </div>
   <form action="">
     <input id="m" autocomplete="off" />
     <button>Send</button>
@@ -14,6 +27,6 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="/js/client.js"></script>
+  <script src="./js/client.js"></script>
 </body>
 </html>

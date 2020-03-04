@@ -5,7 +5,7 @@
 }
 
 body {
-  font: 13px Helvetica, Arial;
+  font: 20px Helvetica, Arial;
 }
 
 form {
@@ -42,4 +42,30 @@ form button {
 
 #messages li:nth-child(odd) {
   background: #eee;
+}
+
+#displaybox {
+  display: flex;
+  flex-direction: row;
+  border: 1;
+}
+
+#chatcol {
+  flex: 1;
+}
+
+#usercol {
+  flex: 0 0 20%;
+}
+
+#userlist {
+  border: 1px solid lightgray;
+  align-items: stretch;
+  overflow-y: auto;
+}
+
+#messagelist {
+  border: 1px solid lightgray;
+  align-items: stretch;
+  overflow-y: auto;
 }
