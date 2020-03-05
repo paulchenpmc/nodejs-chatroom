@@ -2,35 +2,35 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 20px;
+  font-family: 'Oxanium', cursive;
+  color: white;
+  background-color: #2c2f33;
 }
 
-body {
-  font: 20px Helvetica, Arial;
+p {
+  align-items: center;
 }
 
 form {
   display: flex;
   background: #000;
-  /* padding: 3px; */
   position: fixed;
   bottom: 0;
   height: 6vh;
   width: 100%;
-  border: 1px solid black;
+  border: 1px solid #99aab5;
 }
 
 form input {
   border: 0;
-  /* padding: 10px; */
   width: 90%;
-  margin-right: .5%;
 }
 
 form button {
-  width: 9%;
-  background: rgb(130, 224, 255);
+  width: 10%;
+  background: #99aab5;
   border: none;
-  /* padding: 10px; */
 }
 
 #messages {
@@ -43,14 +43,9 @@ form button {
   padding: 5px 10px;
 }
 
-#messages li:nth-child(odd) {
-  background: #eee;
-}
-
 #displaybox {
   display: flex;
   flex-direction: row;
-  border: 1;
 }
 
 #chatcol {
@@ -70,14 +65,25 @@ form button {
 }
 
 #userlist {
-  border: 1px solid lightgray;
   align-items: stretch;
   overflow-y: auto;
 }
 
 #messagelist {
-  border: 1px solid lightgray;
   align-items: stretch;
   max-height: 90vh;
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+
+.scroll1::-webkit-scrollbar {
+  display: block;
+  width: 5px;
+  background-color: #99aab5;
+}
+
+.scroll1::-webkit-scrollbar-thumb {
+  display: block;
+  width: 4px;
+  background-color: black;
+  border-radius: 10px;
 }
