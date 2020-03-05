@@ -4,9 +4,11 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
-let current_users = [];
+
+let current_users = {};
 let message_history = [];
-let re = /\/nick (.+)/i;
+let command_nickname_re = /^\/nick (.+)$/i;
+let command_color_re = /^\/nickcolor (\w\w\w\w\w\w)$/i;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -15,31 +17,42 @@ app.get('/', function(req, res) {
 });
 
 function remove_username(usrname) {
-    let index = current_users.indexOf(usrname);
-    if (index !== -1) current_users.splice(index, 1);
+    let clr = current_users[usrname];
+    delete current_users[usrname];
+    return clr;
 }
 
 io.on('connection', function(socket) {
     let username = uniqueNamesGenerator({ dictionaries: [adjectives, adjectives, animals] });
+    let randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
     console.log(username + ' connected...');
-    current_users.push(username);
+    current_users[username] = randomColor;
     socket.emit('your_username', username);
+    io.emit('current_users', current_users); // Assume this occurs before message_history below for chat coloring
     socket.emit('message_history', message_history);
-    io.emit('current_users', current_users);
 
     socket.on('chat message', function(msg){
-        match = msg.match(re);
-        if (match) {
-            new_username = match[1];
-            if (!current_users.includes(new_username)) {
+        let nickname_command_match = msg.match(command_nickname_re);
+        let color_command_match = msg.match(command_color_re);
+        if (nickname_command_match) {
+            let new_username = nickname_command_match[1];
+            if (!(new_username in current_users)) {
+                // Change nickname for user
                 console.log(username + ' changed to ' + new_username);
-                remove_username(username);
+                let clr = remove_username(username);
                 username = new_username;
-                current_users.push(username);
+                current_users[username] = clr;
                 socket.emit('your_username', username);
                 io.emit('current_users', current_users);
             }
-        } else {
+        } else if (color_command_match) {
+            // Change nickname color for user
+            let new_color = color_command_match[1];
+            current_users[username] = '#' + new_color;
+            io.emit('current_users', current_users);
+        }
+        else {
+            // Regular mesg
             let now = new Date();
             let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
             if (message_history.length >= 200) message_history.shift();
