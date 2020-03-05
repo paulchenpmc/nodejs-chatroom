@@ -7,8 +7,8 @@ const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-na
 
 let current_users = {};
 let message_history = [];
-let command_nickname_re = /^\/nick (.+)$/i;
-let command_color_re = /^\/nickcolor (\w\w\w\w\w\w)$/i;
+let slash_command_re = /^\/(.+) (.+)$/i;
+let command_color_re = /^(\w\w\w\w\w\w)$/i;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -32,26 +32,42 @@ io.on('connection', function(socket) {
     socket.emit('message_history', message_history);
 
     socket.on('chat message', function(msg){
-        let nickname_command_match = msg.match(command_nickname_re);
-        let color_command_match = msg.match(command_color_re);
-        if (nickname_command_match) {
-            let new_username = nickname_command_match[1];
-            if (!(new_username in current_users)) {
-                // Change nickname for user
-                console.log(username + ' changed to ' + new_username);
-                let clr = remove_username(username);
-                username = new_username;
-                current_users[username] = clr;
-                socket.emit('your_username', username);
-                io.emit('current_users', current_users);
+        let slash_command_match = msg.match(slash_command_re);
+        if (slash_command_match) {
+            // Special slash command
+            let slash_command = slash_command_match[1];
+            let command_value = slash_command_match[2];
+            if (slash_command.toLowerCase() === 'nick') {
+                let new_username = command_value;
+                if (!(new_username in current_users)) {
+                    // Change nickname for user
+                    console.log(username + ' changed to ' + new_username);
+                    let clr = remove_username(username);
+                    username = new_username;
+                    current_users[username] = clr;
+                    socket.emit('your_username', username);
+                    io.emit('current_users', current_users);
+                } else {
+                    // Send error mesg to user
+                    socket.emit('error_mesg', 'Error, tried to set username to existing online user...');
+                }
+            } else if (slash_command.toLowerCase() === 'nickcolor') {
+                // Check for valid color
+                let color_command_match = command_value.match(command_color_re);
+                if (color_command_match) {
+                    // Change nickname color for user
+                    let new_color = color_command_match[1];
+                    current_users[username] = '#' + new_color;
+                    io.emit('current_users', current_users);
+                } else {
+                    // Send error mesg to user
+                    socket.emit('error_mesg', 'Error, please format color in HEX in the form: /nickcolor RRGGBB');
+                }
+            } else {
+                // Invalid slash command, send error mesg to user
+                socket.emit('error_mesg', 'Error, invalid slash command...');
             }
-        } else if (color_command_match) {
-            // Change nickname color for user
-            let new_color = color_command_match[1];
-            current_users[username] = '#' + new_color;
-            io.emit('current_users', current_users);
-        }
-        else {
+        } else {
             // Regular mesg
             let now = new Date();
             let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();

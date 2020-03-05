@@ -52,4 +52,8 @@ $(function () {
       let element = document.getElementById("messagelist");
       element.scrollTop = element.scrollHeight;
     });
+
+    socket.on('error_mesg', function(mesg){
+      alert(mesg);
+    });
 });
