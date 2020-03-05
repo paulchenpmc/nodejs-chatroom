@@ -12,7 +12,10 @@ $(function () {
       $('#onlineusers').empty();
       onlineusers = users;
       for (const user of Object.keys(users)) {
-        $('#onlineusers').append($('<li>').text(user).css('color', onlineusers[user]));
+        let listitem = $('<li>');
+        listitem.text(user)
+        listitem.css('color', onlineusers[user]);
+        $('#onlineusers').append(listitem);
       }
     });
 
@@ -21,7 +24,11 @@ $(function () {
         let usrname = msg[0];
         let time = msg[1];
         let msgtext = msg[2];
-        $('#messages').append($('<li>').text(usrname + ' ' + time + ': ' + msgtext).css('color', onlineusers[usrname]));
+        let listitem = $('<li>');
+        listitem.text(usrname + ' ' + time + ': ' + msgtext)
+        listitem.css('color', onlineusers[usrname]);
+        if (usrname === username) listitem.css('font-weight', 'bold');
+        $('#messages').append(listitem);
       }
     });
 
@@ -36,7 +43,11 @@ $(function () {
     socket.on('chat message', function(usrname, time, msg){
       tag = '<li>';
       if (usrname === username) tag += '<b>';
-      $('#messages').append($(tag).text(usrname + ' ' + time + ': ' + msg).css('color', onlineusers[usrname]));
+      let listitem = $('<li>');
+      listitem.text(usrname + ' ' + time + ': ' + msg)
+      listitem.css('color', onlineusers[usrname]);
+      if (usrname === username) listitem.css('font-weight', 'bold');
+      $('#messages').append(listitem);
       // Update scrollbar
       let element = document.getElementById("messagelist");
       element.scrollTop = element.scrollHeight;
