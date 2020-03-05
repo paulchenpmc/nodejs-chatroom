@@ -1,10 +1,21 @@
 $(function () {
     let socket = io();
-    let username = '';
     let onlineusers = {};
+    let username = '';
+    let cookiename = 'socketio-chat-username'
+
+    socket.on('connect', function () {
+      // Check if username cookie exists on connect
+      if (document.cookie.split(';').filter((item) => item.trim().startsWith(cookiename + '=')).length) {
+        // If username exists, use that username
+        let usrname = document.cookie.replace(/(?:(?:^|.*;\s*)socketio-chat-username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        socket.emit('chat message', '/nick ' + usrname);
+      }
+    });
 
     socket.on('your_username', function(usrname){
       username = usrname;
+      document.cookie = cookiename + '=' + usrname;
       $('#username').text(username);
     });
 
