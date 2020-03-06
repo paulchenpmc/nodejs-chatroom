@@ -75,6 +75,10 @@ form button {
   overflow-y: auto;
 }
 
+.username {
+  padding-right: 10px;
+}
+
 .scroll1::-webkit-scrollbar {
   display: block;
   width: 5px;

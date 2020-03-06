@@ -4,6 +4,20 @@ $(function () {
     let username = '';
     let cookiename = 'socketio-chat-username'
 
+    function addChatMessage (usrname, time, msg) {
+      let usernameDiv    = $('<span class="username"/>').text(usrname).css('color', onlineusers[usrname]);
+      let timeDiv        = $('<br><span class="timestamp"/>').text(time).css('font-size', 'small');
+      let messageBodyDiv = $('<span class="mesgtext">').text(msg);
+      if (usrname === username) messageBodyDiv.css('font-weight', 'bold');
+      let messageDiv     = $('<li class="mesg"/>').data('username', usrname).append(usernameDiv, messageBodyDiv, timeDiv);
+
+      // Append to chat
+      $('#messages').append(messageDiv);
+      // Update scrollbar
+      let element = document.getElementById("messagelist");
+      element.scrollTop = element.scrollHeight;
+    }
+
     socket.on('connect', function () {
       // Check if username cookie exists on connect
       if (document.cookie.split(';').filter((item) => item.trim().startsWith(cookiename + '=')).length) {
@@ -31,15 +45,12 @@ $(function () {
     });
 
     socket.on('message_history', function(messages){
+      $('#messages').empty();
       for (msg of messages) {
         let usrname = msg[0];
         let time = msg[1];
         let msgtext = msg[2];
-        let listitem = $('<li>');
-        listitem.text(usrname + ' ' + time + ': ' + msgtext)
-        listitem.css('color', onlineusers[usrname]);
-        if (usrname === username) listitem.css('font-weight', 'bold');
-        $('#messages').append(listitem);
+        addChatMessage(usrname, time, msgtext);
       }
     });
 
@@ -52,16 +63,7 @@ $(function () {
     });
 
     socket.on('chat message', function(usrname, time, msg){
-      tag = '<li>';
-      if (usrname === username) tag += '<b>';
-      let listitem = $('<li>');
-      listitem.text(usrname + ' ' + time + ': ' + msg)
-      listitem.css('color', onlineusers[usrname]);
-      if (usrname === username) listitem.css('font-weight', 'bold');
-      $('#messages').append(listitem);
-      // Update scrollbar
-      let element = document.getElementById("messagelist");
-      element.scrollTop = element.scrollHeight;
+      addChatMessage(usrname, time, msg);
     });
 
     socket.on('error_mesg', function(mesg){

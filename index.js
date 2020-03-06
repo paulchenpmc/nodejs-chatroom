@@ -47,6 +47,7 @@ io.on('connection', function(socket) {
                     current_users[username] = clr;
                     socket.emit('your_username', username);
                     io.emit('current_users', current_users);
+                    socket.emit('message_history', message_history);
                 } else {
                     // Send error mesg to user
                     socket.emit('error_mesg', 'Error, tried to set username to existing online user...');
@@ -70,7 +71,7 @@ io.on('connection', function(socket) {
         } else {
             // Regular mesg
             let now = new Date();
-            let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+            let time = now.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             if (message_history.length >= 200) message_history.shift();
             message_history.push([username, time, msg]);
             io.emit('chat message', username, time, msg);
